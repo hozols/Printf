@@ -8,7 +8,7 @@ main:
 
 	movq $1, %rax
 	movq $1, %rdi
-	movq $str , %rsi
+	movq $hello , %rsi
 	movq $14, %rdx
  
 	syscall
