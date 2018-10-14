@@ -1,10 +1,5 @@
 .globl main
 
-
-#include "hello.S"
-
-personalDetails: .asciz "%d \n"
-
 main:
 
 	movq $-893434, %rdi
