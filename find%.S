@@ -4,7 +4,7 @@ newline: .string " - "
 personalDetails: .asciz "\n %d \n"
 hello: .asciz "Herman"
 percentSign: .asciz "%"
-str2: .asciz "Hello %s %s %s %s %s %s %s \n"
+str2: .asciz "Hello %s %s %s %s %s %s %s %k test \n"
 
 hello2: .asciz "Herman2"
 hello3: .asciz "Herman3"
@@ -81,7 +81,8 @@ checkPercentSign:
 	addq $1, %rsi
 
 	//  read byte of string, then automaticaly increment position in string (next byte)
-	lodsb				
+	lodsb	
+		
 	movq %rax, %r14
 
 	movq %r14, %rdi
@@ -98,10 +99,16 @@ checkPercentSign:
 	cmpq $32, %r14
 	je printPercent
 
-	call printNum
+	// Default code - prints the percent sign and the formatter 
+	addq $-1, %rsi	
+	call printPercent
+	movq %rsi, %rdi
+	call printChar
 
 
 	continuePercent: 
+
+	//addq $1, %rsi		
 
 	movq %rsi, %rax
 
