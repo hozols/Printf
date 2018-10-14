@@ -31,6 +31,7 @@ main:
 
 
 	call exit
+
 printf_hr:
 	pop %r15
 	push %r9
@@ -39,19 +40,21 @@ printf_hr:
 	push %rdx
 	push %rsi
 
-	movq $0,%r13			
-	movq %rdi,%rsi		# effective address of string to %esi
+	movq %rdi,%rsi
 
-	abc:
+	printfReadNextSymbol:
 
-
+	// Null rax
 	movq $0, %rax
 
-	lodsb				# read byte of string, then automaticaly increment position in string (next byte)
+	// read byte of string, then automaticaly increment position in string (next byte)
+	lodsb				
 
+	// Get the previous symbol and print it (as lodsb starts from the second char) 
 	addq $-1, %rsi
 	movq %rax, %r12
 
+	// Check if the char is a percent sign, if so, deal with it in checkPercentSign
 	cmpq $37,%r12
 	je   checkPercentSign	
 
@@ -59,35 +62,27 @@ printf_hr:
 	cmpq $0, %r12
 	je terminateReading
 
-	addq $1,%r13			# counter
-	
-
-	movq $1, %rax
-	movq $1, %rdi
-	movq $1, %rdx
- 
-	syscall
+	movq %rsi, %rdi
+	call printChar
 
 	addq $1,  %rsi
 	movq %rsi, %rax
 
-	jmp  abc			# repeat procedure
+	jmp  printfReadNextSymbol			# repeat procedure
 
 	terminateReading:
 	ret
 	
 
+// Check the value after the percent sign and execute the proper method
 checkPercentSign:
 
-	
+	// Get next symbol
 	addq $1, %rsi
-	lodsb				# read byte of string, then automaticaly increment position in string (next byte)
+
+	//  read byte of string, then automaticaly increment position in string (next byte)
+	lodsb				
 	movq %rax, %r14
-
-	//addq $-1, %rsi
-	//movq %rax, %r12
-	//cmpq $115, %r14
-
 
 	movq %r14, %rdi
 
@@ -107,27 +102,11 @@ checkPercentSign:
 
 
 	continuePercent: 
-	//addq $1, %rsi
+
 	movq %rsi, %rax
 
-	jmp abc
+	jmp printfReadNextSymbol
 
-	
-
-	//movq $0, %rax
-	//movq $personalDetails, %rdi
-	//movq %r11, %rsi
-	//call printf
-
-	// movq $1, %rax
-	// movq $1, %rdi
-	// movq $str , %rsi
-	// movq $30, %rdx
- 
-	// syscall
-	//jmp abc
-
-	//call exit
 
 printPercent:
 	movq $percentSign, %rdi
@@ -164,9 +143,6 @@ printString:
 
 	addq $1, %rsi
 	jmp readNextPartOfString
-
-	//lodsb				# read byte of string, then automaticaly increment position in string (next byte)
-	//addq $1, %rax
 
 	terminateStringPrinting:
 
