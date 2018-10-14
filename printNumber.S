@@ -1,22 +1,12 @@
-.globl main
 
-
-#include "hello.S"
-
-personalDetails: .asciz "%d \n"
-
-main:
-
-	movq $-893434, %rdi
-	call printNum
-
-	call exit
 
 // Print a given number to it's string representation
 // @param %rdi - Number to print
 printNum:
 
+	push %rsi
 	push %r12
+	push %r14
 
 	// Use %r12 as counter of the length of the number
 	movq $0, %r12
@@ -82,7 +72,9 @@ printNum:
 
 	finishPrinting:
 
+	pop %r14
 	pop %r12
+	pop %rsi
 	ret $0
 
 // Print a given char
@@ -102,6 +94,7 @@ printChar:
 
 	syscall
 
+
 	pop %rdx
 	pop %rdi
 	pop %rax
@@ -115,15 +108,12 @@ printChar:
 // @ret %rax = Converted string 
 digitToString:
 
-	push %rbp
-
-	movq %rsp, %rbp
 
 	// Convert number to actual ASCII code
 	addq $48, %rdi
 
 	// Read the string of numbers as a list of chars         
-	leaq str,%rsi    
+	leaq numstr,%rsi    
 
 	readNextDigit:
 
@@ -140,16 +130,15 @@ digitToString:
 
 	// Check if the ascii code is the same as the one provided, if not, try with the next char
 	cmpq %rdi,%rax          
-	jne   continue    
+	jne   checkAgainNum    
 
 	// If equal, return the char and exit the subroutine
 	movq %rsi, %rax
 
-	pop %rbp
 	ret   
 
 	// If not equal, add 1 to the memory address (next char) and try again
-	continue:
+	checkAgainNum:
 
 	addq $1,  %rsi
 	movq %rsi, %rax
@@ -158,5 +147,5 @@ digitToString:
 
 
 .data
-str: .asciz "0123456789"  
+numstr: .asciz "0123456789"  
 negationSign: .asciz "-"
