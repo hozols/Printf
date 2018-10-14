@@ -145,9 +145,7 @@ printString:
 
 	pop %rax
 
-	movq %rsi, %r15
-
-	//push %rsi
+	push %rsi
 
 	movq %rax,%rsi
 	movq $0, %rax
@@ -171,7 +169,7 @@ printString:
 	//addq $1, %rax
 
 	terminateStringPrinting:
-	//pop %rsi
-	movq %r15, %rsi
+
+	pop %rsi
 	jmp continuePercent
 	
