@@ -1,5 +1,10 @@
 .globl main
 
+
+#include "hello.S"
+
+personalDetails: .asciz "%d \n"
+
 main:
 
 	movq $-893434, %rdi
@@ -92,64 +97,64 @@ printChar:
 
 	movq %rdi, %rsi
 	movq $1, %rax
-    movq $1, %rdi
-    movq $1, %rdx
- 
-    syscall
+	movq $1, %rdi
+	movq $1, %rdx
 
-    pop %rdx
-    pop %rdi
-    pop %rax
-    pop %rsi
+	syscall
 
-    ret
+	pop %rdx
+	pop %rdi
+	pop %rax
+	pop %rsi
+
+	ret
 
 
 // Converts a given digit to the actual symbol and returns it
 // @param %rdi = Digit to convert
 // @ret %rax = Converted string 
 digitToString:
-	
+
 	push %rbp
 
 	movq %rsp, %rbp
 
-    // Convert number to actual ASCII code
-    addq $48, %rdi
+	// Convert number to actual ASCII code
+	addq $48, %rdi
 
-    // Read the string of numbers as a list of chars         
-    leaq str,%rsi    
+	// Read the string of numbers as a list of chars         
+	leaq str,%rsi    
 
-    readNextDigit:
+	readNextDigit:
 
-    // Null rax
-    movq $0, %rax
+	// Null rax
+	movq $0, %rax
 
-    // read byte of string, then automaticaly increment position in string (next byte)
-    lodsb               
+	// read byte of string, then automaticaly increment position in string (next byte)
+	lodsb               
 
-    // Rsi holds the actual memory address to the char
-    // rax holds the asci code of the char
+	// Rsi holds the actual memory address to the char
+	// rax holds the asci code of the char
 
-    addq $-1, %rsi
+	addq $-1, %rsi
 
-    // Check if the ascii code is the same as the one provided, if not, try with the next char
-    cmpq %rdi,%rax          
-    jne   continue    
+	// Check if the ascii code is the same as the one provided, if not, try with the next char
+	cmpq %rdi,%rax          
+	jne   continue    
 
-    // If equal, return the char and exit the subroutine
-    movq %rsi, %rax
+	// If equal, return the char and exit the subroutine
+	movq %rsi, %rax
 
-    pop %rbp
-    ret   
+	pop %rbp
+	ret   
 
-    // If not equal, add 1 to the memory address (next char) and try again
-    continue:
+	// If not equal, add 1 to the memory address (next char) and try again
+	continue:
 
-    addq $1,  %rsi
-    movq %rsi, %rax
+	addq $1,  %rsi
+	movq %rsi, %rax
 
-    jmp  readNextDigit            # repeat procedure
+	jmp  readNextDigit            # repeat procedure
 
 
 .data
