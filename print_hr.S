@@ -94,26 +94,21 @@ checkPercentSign:
 
 	//  read byte of string, then automaticaly increment position in string (next byte)
 	lodsb	
-		
-	// Preserve rax's value in r14 for future usage of rax
-	movq %rax, %r14
-
-	movq %r14, %rdi
 
 	// Check if next char is s ()
-	cmpq $115, %r14
+	cmpq $115, %rax
 	je printString
 
 	// Check if next char is u (unsigned number)
-	cmpq $117, %r14
+	cmpq $117, %rax
 	je printDigit
 
 	// Check if next char is d (signed decimal)
-	cmpq $100, %r14
+	cmpq $100, %rax
 	je printDigit
 
 	// Check if next char is % (Print a percent)
-	cmpq $37, %r14
+	cmpq $37, %rax
 	je printPercent
 
 	// Default code - prints the percent sign and the formatter 
