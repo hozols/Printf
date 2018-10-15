@@ -142,10 +142,13 @@ printString:
 	
 	// Print a string
 
+	// GGet the next user input
 	pop %rax
 
+	// Preserve the previous value of rsi in the stack
 	push %rsi
 
+	// Adjust the parameters for lodsb
 	movq %rax,%rsi
 	movq $0, %rax
 
@@ -155,7 +158,8 @@ printString:
 
 	// Start from the first char
 	subq $1, %rsi
-
+ 
+	// Terminate string reading if end of string is reached
 	cmpq $0, %rax
 	je terminateStringPrinting
 
