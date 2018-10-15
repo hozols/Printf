@@ -1,5 +1,3 @@
-
-
 // Print a given number to it's string representation
 // @param %rdi - Number to print
 //%Rax holds the ascii value of char
@@ -25,9 +23,12 @@ printNum:
 	jg goTroughNumber
 
 	// Deal with negative number
+	// Multiply number by -1
 	movq %rdi, %rax
 	movq $-1, %rdi
 	mulq %rdi
+
+	// Print a minus sign
 	movq $negationSign, %rdi
 	call printChar
 	movq %rax, %rdi
