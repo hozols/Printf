@@ -67,13 +67,17 @@ printNum:
 
 	push %rax
 
+	// All digits are stored in the stack, and the total ammount of digits is stored in r12
+	// We run a loop to print every single one of them
 	printAllDigitsLoop:
 	cmpq $0, %r12
 	jl finishPrinting
 
-
+	// Get next digit, store it in rdi and print it
 	pop %rdi
 	call printChar
+
+	// Substract 1 from the counter and run the loop again
 	subq $1, %r12
 	jmp printAllDigitsLoop
 
