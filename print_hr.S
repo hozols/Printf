@@ -1,5 +1,11 @@
+// Assignment 4b
+// Team member 1: Herman Ozols - 4929179
+// Team member 2: Radoslav Stefanov - 4914244
+// Copyright 2018 TU DELFT Computer Organization Course 
+// All rights reserved :)
+
 .data
-str: .asciz "My name is %s. I think I'll get a %u for my exam. What does %d do? %s And %% \n"	# if there is '\n', then it increment length by 1
+str: .asciz "My name is %s. I think I'll get a %u for my exam. What does %d do? %s %s or %d And %% \n"	# if there is '\n', then it increment length by 1
 newline: .string " - "
 personalDetails: .asciz "\n %d \n"
 hello: .asciz "Herman"
@@ -24,6 +30,8 @@ main:
 	movq $43, %rdx
 	movq $587, %rcx	
 	movq $hello2, %r8
+	movq $hello2, %r9
+	push $42
 
 
 	call printf_hr
@@ -63,11 +71,12 @@ printf_hr:
 	cmpq $0, %r12
 	je terminateReading
 
+	// Print the current character
 	movq %rsi, %rdi
 	call printChar
 
+	// Bring back the subtracted value to rsi
 	addq $1,  %rsi
-	movq %rsi, %rax
 
 	jmp  printfReadNextSymbol			# repeat procedure
 
@@ -84,6 +93,7 @@ checkPercentSign:
 	//  read byte of string, then automaticaly increment position in string (next byte)
 	lodsb	
 		
+	// Preserve rax's value in r14 for future usage of rax
 	movq %rax, %r14
 
 	movq %r14, %rdi
@@ -111,28 +121,26 @@ checkPercentSign:
 	call printChar
 
 
-	continuePercent: 
-
-	//addq $1, %rsi		
-
-	movq %rsi, %rax
-
 	jmp printfReadNextSymbol
 
 
 printPercent:
+	// Print a percent sign
 	movq $percentSign, %rdi
 	call printChar
-	jmp continuePercent
+	jmp printfReadNextSymbol
 
 printDigit:
-
+	
+	// Print a number 
 	pop %rdi
 	call printNum
 
-	jmp continuePercent
+	jmp printfReadNextSymbol
 
 printString:
+	
+	// Print a string
 
 	pop %rax
 
@@ -141,9 +149,11 @@ printString:
 	movq %rax,%rsi
 	movq $0, %rax
 
+	// Read the string char by char and print every single chart
 	readNextPartOfString:
 	lodsb
 
+	// Start from the first char
 	subq $1, %rsi
 
 	cmpq $0, %rax
@@ -159,5 +169,5 @@ printString:
 	terminateStringPrinting:
 
 	pop %rsi
-	jmp continuePercent
+	jmp printfReadNextSymbol
 	
