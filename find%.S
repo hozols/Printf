@@ -1,10 +1,10 @@
 .data
-str: .asciz "My name is %s. I think I'll get a %u for my exam. What does %d do? And % \n"	# if there is '\n', then it increment length by 1
+str: .asciz "My name is %s. I think I'll get a %u for my exam. What does %d do? %s And %% \n"	# if there is '\n', then it increment length by 1
 newline: .string " - "
 personalDetails: .asciz "\n %d \n"
 hello: .asciz "Herman"
 percentSign: .asciz "%"
-str2: .asciz "Hello %s %s %s %s %s %s %s %k test \n"
+str2: .asciz "Hello %s %d %d %k test \n"
 
 hello2: .asciz "Herman2"
 hello3: .asciz "Herman3"
@@ -12,20 +12,19 @@ hello4: .asciz "Herman4"
 hello5: .asciz "Herman5"
 hello6: .asciz "Herman6"
 hello7: .asciz "Herman7"
+hello8: .asciz "Herman7"
 
 .globl main
 
 #include "printNumber.S"
 
 main:
-	movq $str2, %rdi
+	movq $str, %rdi
 	movq $hello, %rsi
-	movq $hello2, %rdx
-	movq $hello3, %rcx
-	movq $hello4, %r8
-	movq $hello5, %r9
-	push $hello6
-	push $hello7
+	movq $43, %rdx
+	movq $587, %rcx	
+	movq $hello2, %r8
+
 
 	call printf_hr
 
@@ -33,6 +32,8 @@ main:
 	call exit
 
 printf_hr:
+
+	// Add all possible parameters to the stack
 	pop %r15
 	push %r9
 	push %r8
@@ -87,16 +88,20 @@ checkPercentSign:
 
 	movq %r14, %rdi
 
+	// Check if next char is s ()
 	cmpq $115, %r14
 	je printString
 
+	// Check if next char is u (unsigned number)
 	cmpq $117, %r14
 	je printDigit
 
+	// Check if next char is d (signed decimal)
 	cmpq $100, %r14
 	je printDigit
 
-	cmpq $32, %r14
+	// Check if next char is % (Print a percent)
+	cmpq $37, %r14
 	je printPercent
 
 	// Default code - prints the percent sign and the formatter 
