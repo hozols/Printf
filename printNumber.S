@@ -87,6 +87,7 @@ printChar:
 	push %rdi
 	push %rdx
 
+	// Print a single character (holded in %rdi)
 	movq %rdi, %rsi
 	movq $1, %rax
 	movq $1, %rdi
