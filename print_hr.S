@@ -25,6 +25,8 @@ hello8: .asciz "Herman7"
 #include "printNumber.S"
 
 main:
+
+	// That's how you use our printf_hr function
 	movq $str, %rdi
 	movq $hello, %rsi
 	movq $43, %rdx
@@ -163,15 +165,17 @@ printString:
 	cmpq $0, %rax
 	je terminateStringPrinting
 
-
+	// Print the current char 
 	movq %rsi, %rdi
 	call printChar
 
+	// Go for the next char
 	addq $1, %rsi
 	jmp readNextPartOfString
 
 	terminateStringPrinting:
 
+	// Jump back to reading the original string
 	pop %rsi
 	jmp printfReadNextSymbol
 	
