@@ -2,6 +2,13 @@
 
 // Print a given number to it's string representation
 // @param %rdi - Number to print
+//%Rax holds the ascii value of char
+//%Rsi holds the memory address of char
+.data
+numstr: .asciz "0123456789"
+negationSign: .asciz "-"
+
+
 printNum:
 
 	push %rsi
@@ -65,7 +72,7 @@ printNum:
 	jl finishPrinting
 
 
-	pop %rdi 
+	pop %rdi
 	call printChar
 	subq $1, %r12
 	jmp printAllDigitsLoop
@@ -80,7 +87,7 @@ printNum:
 // Print a given char
 // @param %rdi - char to print
 printChar:
-	
+
 	// Preserve old value of used registers here
 	push %rsi
 	push %rax
@@ -106,23 +113,23 @@ printChar:
 
 // Converts a given digit to the actual symbol and returns it
 // @param %rdi = Digit to convert
-// @ret %rax = Converted string 
+// @ret %rax = Converted string
 digitToString:
 
 
 	// Convert number to actual ASCII code
 	addq $48, %rdi
 
-	// Read the string of numbers as a list of chars         
-	leaq numstr,%rsi    
+	// Read the string of numbers as a list of chars
+	leaq numstr,%rsi
 
-	readNextDigit:
+readNextDigit:
 
 	// Null rax
 	movq $0, %rax
 
 	// read byte of string, then automaticaly increment position in string (next byte)
-	lodsb               
+	lodsb
 
 	// Rsi holds the actual memory address to the char
 	// rax holds the asci code of the char
@@ -130,13 +137,13 @@ digitToString:
 	addq $-1, %rsi
 
 	// Check if the ascii code is the same as the one provided, if not, try with the next char
-	cmpq %rdi,%rax          
-	jne   checkAgainNum    
+	cmpq %rdi,%rax
+	jne  checkAgainNum
 
 	// If equal, return the char and exit the subroutine
 	movq %rsi, %rax
 
-	ret   
+	ret
 
 	// If not equal, add 1 to the memory address (next char) and try again
 	checkAgainNum:
@@ -145,8 +152,3 @@ digitToString:
 	movq %rsi, %rax
 
 	jmp  readNextDigit            # repeat procedure
-
-
-.data
-numstr: .asciz "0123456789"  
-negationSign: .asciz "-"
