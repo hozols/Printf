@@ -1,6 +1,6 @@
 // Assignment 4b
-// Team member 1: Herman Ozols - 4929179
-// Team member 2: Radoslav Stefanov - 4914244
+// Team member 1: hozols - Herman Ozols - 4929179
+// Team member 2: rstefanov - Radoslav Stefanov - 4914244
 // Copyright 2018 TU DELFT Computer Organization Course 
 // All rights reserved :)
 
