@@ -10,23 +10,23 @@ newline: .string " - "
 personalDetails: .asciz "\n %d \n"
 hello: .asciz "Herman"
 percentSign: .asciz "%"
-str2: .asciz "Hello %s %d %d %k test \n"
+str2: .asciz "Hello %d test2 \n"
 
-hello2: .asciz "Herman2"
-hello3: .asciz "Herman3"
-hello4: .asciz "Herman4"
-hello5: .asciz "Herman5"
-hello6: .asciz "Herman6"
-hello7: .asciz "Herman7"
-hello8: .asciz "Herman7"
+hello2: .asciz "Strin2"
+hello3: .asciz "Strin3"
+hello4: .asciz "Strin4"
+hello5: .asciz "Strin5"
+hello6: .asciz "Strin6"
+hello7: .asciz "Strin7"
+hello8: .asciz "Strin8"
 
 .globl main
 
 #include "printNumber.S"
 
 main:
-
-	// That's how you use our printf_hr function
+	movq $0, %rax
+	// // That's how you use our printf_hr function
 	movq $str, %rdi
 	movq $hello, %rsi
 	movq $43, %rdx
@@ -34,17 +34,31 @@ main:
 	movq $hello2, %r8
 	movq $hello2, %r9
 	push $42
-
-
 	call printf_hr
 
+	//push $42
+
+	// Code works after subroutine
+	push $15
+	pop %r15
+	movq $0, %rax
+	movq $personalDetails, %rdi
+	movq %r15, %rsi
+	call printf
+
+
+	// movq $str2, %rdi
+	// movq $42, %rsi
+	// call printf_hr
 
 	call exit
 
 printf_hr:
+	
+	pop %r14
 
 	// Add all possible parameters to the stack
-	pop %r15
+	//pop %r15
 	push %r9
 	push %r8
 	push %rcx
@@ -52,6 +66,7 @@ printf_hr:
 	push %rsi
 
 	movq %rdi,%rsi
+	movq $5, %r9
 
 	printfReadNextSymbol:
 
@@ -83,6 +98,18 @@ printf_hr:
 	jmp  printfReadNextSymbol			# repeat procedure
 
 	terminateReading:
+
+	cleanStackLoop:
+	cmp $0, %r9
+	jle finishSubroutine
+	pop %r8
+	subq $1, %r9
+	jmp cleanStackLoop
+
+	finishSubroutine:
+
+	push %r14
+
 	ret
 	
 
@@ -128,6 +155,8 @@ printPercent:
 	jmp printfReadNextSymbol
 
 printDigit:
+
+	subq $1, %r15
 	
 	// Print a number 
 	pop %rdi
@@ -137,6 +166,7 @@ printDigit:
 
 printString:
 	
+	subq $1, %r15
 	// Print a string
 
 	// GGet the next user input
